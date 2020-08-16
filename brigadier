@@ -62,7 +62,10 @@ def downloadFile(url, filename):
     urlretrieve(url, filename, reporthook=reporthook)
 
 def sevenzipExtract(arcfile, command='e', out_dir=None):
-    cmd = [os.path.join(os.environ['SYSTEMDRIVE'] + "\\", "Program Files", "7-Zip", "7z.exe")]
+    sevenzip_binary = os.path.join(os.environ['SYSTEMDRIVE'] + "\\", 'Program Files', '7-Zip', '7z.exe')
+    if not os.path.exists(sevenzip_binary):
+        sevenzip_binary = os.path.join(os.environ['SYSTEMDRIVE'] + "\\", 'Program Files', '7-Zip-Zstandard', '7z.exe')
+    cmd = [sevenzip_binary]
     cmd.append(command)
     if not out_dir:
         out_dir = os.path.dirname(arcfile)
@@ -276,6 +279,8 @@ when running the installer out of 'system32'." % output_dir)
         if platform.system() == 'Windows':
             we_installed_7zip = False
             sevenzip_binary = os.path.join(os.environ['SYSTEMDRIVE'] + "\\", 'Program Files', '7-Zip', '7z.exe')
+            if not os.path.exists(sevenzip_binary):
+                sevenzip_binary = os.path.join(os.environ['SYSTEMDRIVE'] + "\\", 'Program Files', '7-Zip-Zstandard', '7z.exe')
             # fetch and install 7-Zip
             if not os.path.exists(sevenzip_binary):
                 tempdir = tempfile.mkdtemp()
